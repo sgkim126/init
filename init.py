@@ -167,11 +167,14 @@ if __name__ == '__main__':
         def install_commands(prefix, current_path):
             return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
                     % (prefix, prefix)]
+        def get_env(prefix, current_path):
+            return { 'prefix': prefix, 'CURDIR': prefix }
         try_and_catch(functools.partial(
             install,
             'https://github.com/git/git/archive/v2.6.4.tar.gz',
             'git-2.6.4.tar.gz',
-            install_commands))
+            install_commands,
+            get_env))
 
     if confirm('Do you want to install node.js?(y/n) '):
         def install_commands(prefix, current_path):
