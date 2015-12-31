@@ -65,7 +65,7 @@ def git_config():
         global_config('github.user', username)
 
 
-def install(url, tarname, commands):
+def install(url, tarname, commands, env=None):
     home = os.getenv('HOME')
     prefix = os.path.join(home, '.root')
     opt = os.path.join(prefix, 'opt')
@@ -84,8 +84,13 @@ def install(url, tarname, commands):
     os.chdir(path)
 
     def call_commands():
+        if env is None:
+            custom_environ = os.environ
+        else:
+            custom_environ = os.environ.copy()
+            custom_environ.update(env(prefix, path))
         for command in commands(prefix, path):
-            subprocess.call(command.split(' '))
+            subprocess.Popen(command.split(' '), env=custom_environ)
     try_and_catch(call_commands)
 
 
