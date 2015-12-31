@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
+import functools
 import os
 import subprocess
 import sys
 import tarfile
 import traceback
 import urllib.request
+
+
+def try_and_catch(function):
+    try:
+        function()
+    except Exception as ex:
+        print(ex)
+        traceback.print_exc(file=sys.stdout)
 
 
 def apt_get_install(packages):
@@ -73,7 +82,8 @@ def install(url, tarname, commands):
             tarfile.open(tarname).extractall()
         os.remove(tarpath)
     os.chdir(path)
-    try:
+
+    def call_commands():
         for command in commands(prefix, path):
             subprocess.call(command)
     try_and_catch(call_commands)
@@ -89,40 +99,26 @@ def confirm(message):
 
 
 if __name__ == '__main__':
-    try:
-        if confirm('Do you want to install packages with sudo?(y/n) '):
-            apt_get_install(['build-essential', 'clang'])
-    except Exception as ex:
-        print(ex)
-        traceback.print_exc(file=sys.stdout)
+    if confirm('Do you want to install packages with sudo?(y/n) '):
+        try_and_catch(functools.partial(
+            apt_get_install, 'build-essential', 'clang'))
 
-    try:
-        if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
-            initialize_root()
-    except Exception as ex:
-        print(ex)
-        traceback.print_exc(file=sys.stdout)
+    if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
+        try_and_catch(initialize_root)
 
-    try:
-        if confirm('Do you want to config git?(y/n) '):
-            git_config()
-    except Exception as ex:
-        print(ex)
-        traceback.print_exc(file=sys.stdout)
+    if confirm('Do you want to config git?(y/n) '):
+        try_and_catch(git_config)
 
-    try:
-        if confirm('Do you want to install virtualenv?(y/n) '):
-            def install_virtualenv_command(prefix, current_path):
-                bin_path = os.path.join(prefix, 'bin')
-                sym_path = os.path.join(bin_path, 'virtualenv')
-                target = os.path.join(current_path, 'virtualenv.py')
-                return [['rm', '-f', sym_path],
-                    ['ln', '-s', target, sym_path]]
-            install(
-                'https://pypi.python.org/packages/source/v/virtualenv/virtualenv-13.1.2.tar.gz',
-                'virtualenv-13.1.2.tar.gz',
-                install_virtualenv_command,
-            )
-    except Exception as ex:
-        print(ex)
-        traceback.print_exc(file=sys.stdout)
+    if confirm('Do you want to install virtualenv?(y/n) '):
+        def install_virtualenv_command(prefix, current_path):
+            bin_path = os.path.join(prefix, 'bin')
+            sym_path = os.path.join(bin_path, 'virtualenv')
+            target = os.path.join(current_path, 'virtualenv.py')
+            return [['rm', '-f', sym_path],
+                ['ln', '-s', target, sym_path]]
+        try_and_catch(functools.partial(
+            install,
+            ('https://pypi.python.org/packages/source/v/virtualenv/'
+             'virtualenv-13.1.2.tar.gz'),
+            'virtualenv-13.1.2.tar.gz',
+            install_virtualenv_command))
