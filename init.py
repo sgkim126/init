@@ -144,3 +144,16 @@ if __name__ == '__main__':
             'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
             'libtool-2.4.6.tar.gz',
             install_libtool))
+
+    if confirm('Do you want to install curl?(y/n) '):
+        def install_commands(prefix, current_path):
+            return ['./buildconf',
+                    './configure --prefix=%s' % prefix,
+                    'make',
+                    'make install']
+        try_and_catch(functools.partial(
+            install,
+            ('https://github.com/bagder/curl/releases/download/curl-7_46_0/'
+             'curl-7.46.0.tar.gz'),
+            'curl-7.46.0.tar.gz',
+            install_commands))
