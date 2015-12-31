@@ -133,3 +133,14 @@ if __name__ == '__main__':
             'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
             'cmake-3.4.1.tar.gz',
             install_cmake))
+
+    if confirm('Do you want to install libtool?(y/n) '):
+        def install_libtool(prefix, current_path):
+            return ['./configure --prefix=%s' % prefix,
+                    'make',
+                    'make install']
+        try_and_catch(functools.partial(
+            install,
+            'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
+            'libtool-2.4.6.tar.gz',
+            install_libtool))
