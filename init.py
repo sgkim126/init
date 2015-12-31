@@ -90,7 +90,9 @@ def install(url, tarname, commands, env=None):
             custom_environ = os.environ.copy()
             custom_environ.update(env(prefix, path))
         for command in commands(prefix, path):
-            subprocess.Popen(command.split(' '), env=custom_environ)
+            process = subprocess.Popen(command.split(' '), env=custom_environ)
+            while process.wait() is None:
+                continue
     try_and_catch(call_commands)
 
 
