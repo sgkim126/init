@@ -85,7 +85,7 @@ def install(url, tarname, commands):
 
     def call_commands():
         for command in commands(prefix, path):
-            subprocess.call(command)
+            subprocess.call(command.split(' '))
     try_and_catch(call_commands)
 
 
@@ -114,8 +114,8 @@ if __name__ == '__main__':
             bin_path = os.path.join(prefix, 'bin')
             sym_path = os.path.join(bin_path, 'virtualenv')
             target = os.path.join(current_path, 'virtualenv.py')
-            return [['rm', '-f', sym_path],
-                ['ln', '-s', target, sym_path]]
+            return ['rm -f %s' % sym_path,
+                    'ln -s %s %s' % (target, sym_path)]
         try_and_catch(functools.partial(
             install,
             ('https://pypi.python.org/packages/source/v/virtualenv/'
