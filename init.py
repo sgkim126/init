@@ -167,3 +167,14 @@ if __name__ == '__main__':
             'https://github.com/git/git/archive/v2.6.4.tar.gz',
             'git-2.6.4.tar.gz',
             install_commands))
+
+    if confirm('Do you want to install node.js?(y/n) '):
+        def install_commands(prefix, current_path):
+            return ['./configure --prefix=%s' % prefix,
+                    'make',
+                    'make install']
+        try_and_catch(functools.partial(
+            install,
+            'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
+            'node-5.3.0.tar.gz',
+            install_commands))
