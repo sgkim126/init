@@ -56,6 +56,29 @@ def git_config():
         global_config('github.user', username)
 
 
+def install(url, tarname, commands):
+    home = os.getenv('HOME')
+    prefix = os.path.join(home, '.root')
+    opt = os.path.join(prefix, 'opt')
+    seperator = os.sep
+    tarpath = os.path.join(opt, tarname)
+    name = tarname[:-7]  # remove .tar.gz
+    path = os.path.join(opt, name)
+
+    os.makedirs(opt, exist_ok=True)  # mkdir $HOME/.root/opt
+    os.chdir(opt)
+    if not os.path.exists(path):
+        if not os.path.exists(tarpath):
+            urllib.request.urlretrieve(url, tarname)
+            tarfile.open(tarname).extractall()
+        os.remove(tarpath)
+    os.chdir(path)
+    try:
+        for command in commands(prefix, path):
+            subprocess.call(command)
+    try_and_catch(call_commands)
+
+
 def confirm(message):
     while True:
         i = input(message)
@@ -83,6 +106,23 @@ if __name__ == '__main__':
     try:
         if confirm('Do you want to config git?(y/n) '):
             git_config()
+    except Exception as ex:
+        print(ex)
+        traceback.print_exc(file=sys.stdout)
+
+    try:
+        if confirm('Do you want to install virtualenv?(y/n) '):
+            def install_virtualenv_command(prefix, current_path):
+                bin_path = os.path.join(prefix, 'bin')
+                sym_path = os.path.join(bin_path, 'virtualenv')
+                target = os.path.join(current_path, 'virtualenv.py')
+                return [['rm', '-f', sym_path],
+                    ['ln', '-s', target, sym_path]]
+            install(
+                'https://pypi.python.org/packages/source/v/virtualenv/virtualenv-13.1.2.tar.gz',
+                'virtualenv-13.1.2.tar.gz',
+                install_virtualenv_command,
+            )
     except Exception as ex:
         print(ex)
         traceback.print_exc(file=sys.stdout)
