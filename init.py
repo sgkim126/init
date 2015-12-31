@@ -157,3 +157,13 @@ if __name__ == '__main__':
              'curl-7.46.0.tar.gz'),
             'curl-7.46.0.tar.gz',
             install_commands))
+
+    if confirm('Do you want to install git?(y/n) '):
+        def install_commands(prefix, current_path):
+            return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
+                    % (prefix, prefix)]
+        try_and_catch(functools.partial(
+            install,
+            'https://github.com/git/git/archive/v2.6.4.tar.gz',
+            'git-2.6.4.tar.gz',
+            install_commands))
