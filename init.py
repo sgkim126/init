@@ -122,3 +122,14 @@ if __name__ == '__main__':
              'virtualenv-13.1.2.tar.gz'),
             'virtualenv-13.1.2.tar.gz',
             install_virtualenv_command))
+
+    if confirm('Do you want to install cmake?(y/n) '):
+        def install_cmake(prefix, current_path):
+            return ['./configure --prefix=%s' % prefix,
+                    'make',
+                    'make install']
+        try_and_catch(functools.partial(
+            install,
+            'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
+            'cmake-3.4.1.tar.gz',
+            install_cmake))
