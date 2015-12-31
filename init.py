@@ -186,3 +186,15 @@ if __name__ == '__main__':
             'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
             'node-5.3.0.tar.gz',
             install_commands))
+
+    if confirm('Do you want to install ant?(y/n) '):
+        def install_commands(prefix, current_path):
+            return ['./build.sh install-lite']
+        def get_env(prefix, current_path):
+            return { 'ANT_HOME': prefix }
+        try_and_catch(functools.partial(
+            install,
+            'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
+            'apache-ant-1.9.6.tar.gz',
+            install_commands,
+            get_env))
