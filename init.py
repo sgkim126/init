@@ -200,3 +200,28 @@ if __name__ == '__main__':
             'apache-ant-1.9.6',
             install_commands,
             get_env))
+
+    if confirm('Do you want to install sbt?(y/n) '):
+        def install_commands(prefix, current_path):
+            url = ('https://raw.githubusercontent.com/sgkim126/init/master/'
+                   'tools/generate_sbt.sh')
+            script_name = url.split('/')[-1]
+            script_path = os.path.join(current_path, script_name)
+            bin_path = os.path.join(prefix, 'bin')
+            sbt_path = os.path.join(bin_path, 'sbt')
+            return [
+                'mkdir %s' % bin_path,
+                'rm -f %s' % script_path,
+                'curl %s -o %s' % (url, script_path),
+                'rm -f %s' % sbt_path,
+                'touch %s' % sbt_path,
+                'chmod u+x %s' % sbt_path,
+                'bash %s %s' % (script_path, prefix),
+                'rm -f %s' % script_path,
+            ]
+        try_and_catch(functools.partial(
+            install,
+            ('https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/'
+             'sbt-0.13.9.tgz'),
+            'sbt',
+            install_commands))
