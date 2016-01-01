@@ -65,14 +65,14 @@ def git_config():
         global_config('github.user', username)
 
 
-def install(url, tarname, commands, env=None):
+def install(url, dirname, commands, env=None):
     home = os.getenv('HOME')
     prefix = os.path.join(home, '.root')
     opt = os.path.join(prefix, 'opt')
     seperator = os.sep
+    tarname = url.split('/')[-1]
     tarpath = os.path.join(opt, tarname)
-    name = tarname[:-7]  # remove .tar.gz
-    path = os.path.join(opt, name)
+    path = os.path.join(opt, dirname)
 
     os.makedirs(opt, exist_ok=True)  # mkdir $HOME/.root/opt
     os.chdir(opt)
@@ -127,7 +127,7 @@ if __name__ == '__main__':
             install,
             ('https://pypi.python.org/packages/source/v/virtualenv/'
              'virtualenv-13.1.2.tar.gz'),
-            'virtualenv-13.1.2.tar.gz',
+            'virtualenv-13.1.2',
             install_virtualenv_command))
 
     if confirm('Do you want to install cmake?(y/n) '):
@@ -138,7 +138,7 @@ if __name__ == '__main__':
         try_and_catch(functools.partial(
             install,
             'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
-            'cmake-3.4.1.tar.gz',
+            'cmake-3.4.1',
             install_cmake))
 
     if confirm('Do you want to install libtool?(y/n) '):
@@ -149,7 +149,7 @@ if __name__ == '__main__':
         try_and_catch(functools.partial(
             install,
             'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
-            'libtool-2.4.6.tar.gz',
+            'libtool-2.4.6',
             install_libtool))
 
     if confirm('Do you want to install curl?(y/n) '):
@@ -162,7 +162,7 @@ if __name__ == '__main__':
             install,
             ('https://github.com/bagder/curl/releases/download/curl-7_46_0/'
              'curl-7.46.0.tar.gz'),
-            'curl-7.46.0.tar.gz',
+            'curl-7.46.0',
             install_commands))
 
     if confirm('Do you want to install git?(y/n) '):
@@ -174,7 +174,7 @@ if __name__ == '__main__':
         try_and_catch(functools.partial(
             install,
             'https://github.com/git/git/archive/v2.6.4.tar.gz',
-            'git-2.6.4.tar.gz',
+            'git-2.6.4',
             install_commands,
             get_env))
 
@@ -186,7 +186,7 @@ if __name__ == '__main__':
         try_and_catch(functools.partial(
             install,
             'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
-            'node-5.3.0.tar.gz',
+            'node-5.3.0',
             install_commands))
 
     if confirm('Do you want to install ant?(y/n) '):
@@ -197,6 +197,6 @@ if __name__ == '__main__':
         try_and_catch(functools.partial(
             install,
             'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
-            'apache-ant-1.9.6.tar.gz',
+            'apache-ant-1.9.6',
             install_commands,
             get_env))
