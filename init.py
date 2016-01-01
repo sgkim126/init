@@ -225,3 +225,25 @@ if __name__ == '__main__':
              'sbt-0.13.9.tgz'),
             'sbt',
             install_commands))
+
+    if confirm('Do you want to install scala?(y/n) '):
+        def install_commands(prefix, current_path):
+            source_path = os.path.join(current_path, 'bin')
+            bin_path = os.path.join(prefix, 'bin')
+            binaries = [
+                'scalac',
+                'fsc',
+                'scala',
+                'scalap',
+                'scaladoc',
+            ]
+            join = os.path.join
+            source = lambda binary: os.path.join(source_path, binary)
+            destination = lambda binary: os.path.join(bin_path, binary)
+            return [ 'ln -s %s %s' % (source(binary), destination(binary))
+                    for binary in binaries ]
+        try_and_catch(partial(
+            install,
+            'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz',
+            'scala-2.11.7',
+            install_commands))
