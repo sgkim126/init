@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import functools
+from functools import partial
 import os
 import subprocess
 import sys
@@ -107,7 +107,7 @@ def confirm(message):
 
 if __name__ == '__main__':
     if confirm('Do you want to install packages with sudo?(y/n) '):
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             apt_get_install, 'build-essential', 'clang'))
 
     if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
@@ -123,7 +123,7 @@ if __name__ == '__main__':
             target = os.path.join(current_path, 'virtualenv.py')
             return ['rm -f %s' % sym_path,
                     'ln -s %s %s' % (target, sym_path)]
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             ('https://pypi.python.org/packages/source/v/virtualenv/'
              'virtualenv-13.1.2.tar.gz'),
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             return ['./configure --prefix=%s' % prefix,
                     'make',
                     'make install']
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
             'cmake-3.4.1',
@@ -146,7 +146,7 @@ if __name__ == '__main__':
             return ['./configure --prefix=%s' % prefix,
                     'make',
                     'make install']
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
             'libtool-2.4.6',
@@ -158,7 +158,7 @@ if __name__ == '__main__':
                     './configure --prefix=%s' % prefix,
                     'make',
                     'make install']
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             ('https://github.com/bagder/curl/releases/download/curl-7_46_0/'
              'curl-7.46.0.tar.gz'),
@@ -171,7 +171,7 @@ if __name__ == '__main__':
                     % (prefix, prefix)]
         def get_env(prefix, current_path):
             return { 'prefix': prefix, 'CURDIR': prefix }
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             'https://github.com/git/git/archive/v2.6.4.tar.gz',
             'git-2.6.4',
@@ -183,7 +183,7 @@ if __name__ == '__main__':
             return ['./configure --prefix=%s' % prefix,
                     'make',
                     'make install']
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
             'node-5.3.0',
@@ -194,7 +194,7 @@ if __name__ == '__main__':
             return ['./build.sh install-lite']
         def get_env(prefix, current_path):
             return { 'ANT_HOME': prefix }
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
             'apache-ant-1.9.6',
@@ -219,7 +219,7 @@ if __name__ == '__main__':
                 'bash %s %s' % (script_path, prefix),
                 'rm -f %s' % script_path,
             ]
-        try_and_catch(functools.partial(
+        try_and_catch(partial(
             install,
             ('https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/'
              'sbt-0.13.9.tgz'),
