@@ -16,7 +16,7 @@ def try_and_catch(function):
         traceback.print_exc(file=sys.stdout)
 
 
-def apt_get_install(packages):
+def apt_get_install(*packages):
     subprocess.call(['sudo', 'apt-get', 'update'])
     subprocess.call(['sudo', 'apt-get', 'upgrade', '-y'])
     apt_get_command_without_target = ['sudo', 'apt-get', 'install', '-y']
