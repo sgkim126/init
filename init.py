@@ -133,8 +133,8 @@ def install(url, dirname, commands, env=None):
             custom_environ = os.environ
         else:
             custom_environ = os.environ.copy()
-            custom_environ.update(env(PREFIX, path))
-        for command in commands(PREFIX, path):
+            custom_environ.update(env(path))
+        for command in commands(path):
             process = subprocess.Popen(command.split(' '), env=custom_environ)
             while process.wait() is None:
                 continue
@@ -151,7 +151,7 @@ def confirm(message):
 
 
 def install_virtualenv():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         sym_path = os.path.join(BIN_PATH, 'virtualenv')
         target = os.path.join(current_path, 'virtualenv.py')
         return ['rm -f %s' % sym_path,
@@ -165,7 +165,7 @@ def install_virtualenv():
 
 
 def install_cmake():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
@@ -177,7 +177,7 @@ def install_cmake():
 
 
 def install_libtool():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
@@ -189,7 +189,7 @@ def install_libtool():
 
 
 def install_curl():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         return ['./buildconf',
                 './configure --prefix=%s' % PREFIX,
                 'make',
@@ -203,7 +203,7 @@ def install_curl():
 
 
 def install_git():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         new_work_dir = os.path.join(current_path, 'contrib', 'workdir',
                                     'git-new-workdir')
         bin_dir = os.path.join(PREFIX, 'git-new-workdir')
@@ -212,7 +212,7 @@ def install_git():
                 'rm -f %s' % bin_dir,
                 'ln -s %s %s' % (new_work_dir, bin_dir)]
 
-    def get_env(prefix, current_path):
+    def get_env(current_path):
         return {'prefix': PREFIX, 'CURDIR': PREFIX}
     try_and_catch(partial(
         install,
@@ -223,7 +223,7 @@ def install_git():
 
 
 def install_node():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
@@ -235,10 +235,10 @@ def install_node():
 
 
 def install_ant():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         return ['./build.sh install-lite']
 
-    def get_env(prefix, current_path):
+    def get_env(current_path):
         return {'ANT_HOME': PREFIX}
     try_and_catch(partial(
         install,
@@ -249,7 +249,7 @@ def install_ant():
 
 
 def install_sbt():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         url = ('https://raw.githubusercontent.com/sgkim126/init/master/'
                'tools/generate_sbt.sh')
         script_name = url.split('/')[-1]
@@ -274,7 +274,7 @@ def install_sbt():
 
 
 def install_python():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install', ]
@@ -286,7 +286,7 @@ def install_python():
 
 
 def install_scala():
-    def install_commands(prefix, current_path):
+    def install_commands(current_path):
         source_path = os.path.join(current_path, 'bin')
         binaries = [
             'scalac',
