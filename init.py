@@ -175,8 +175,13 @@ def install_curl():
 
 def install_git():
     def install_commands(prefix, current_path):
+        new_work_dir = os.path.join(current_path, 'contrib', 'workdir',
+                                    'git-new-workdir')
+        bin_dir = os.path.join(prefix, 'git-new-workdir')
         return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
-                % (prefix, prefix)]
+                % (prefix, prefix),
+                'rm -f %s' % bin_dir,
+                'ln -s %s %s' % (new_work_dir, bin_dir)]
 
     def get_env(prefix, current_path):
         return {'prefix': prefix, 'CURDIR': prefix}
