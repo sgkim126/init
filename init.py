@@ -36,16 +36,10 @@ def initialize_root():
         home = os.getenv('HOME')
         prefix = os.path.join(home, '.root')
 
-        dirs = []
-        dirs.append(os.path.join(prefix, 'bin'))
-        dirs.append(os.path.join(prefix, 'include'))
-        dirs.append(os.path.join(prefix, 'lib'))
-        dirs.append(os.path.join(prefix, 'opt'))
-        dirs.append(os.path.join(prefix, 'tmp'))
-        dirs.append(os.path.join(prefix, 'var'))
-        dirs.append(os.path.join(prefix, 'share', 'doc'))
-        dirs.append(os.path.join(prefix, 'share', 'info'))
-        dirs.append(os.path.join(prefix, 'share', 'man'))
+        dirs = [os.path.join(prefix, 'bin'), os.path.join(prefix, 'include'), os.path.join(prefix, 'lib'),
+                os.path.join(prefix, 'opt'), os.path.join(prefix, 'tmp'), os.path.join(prefix, 'var'),
+                os.path.join(prefix, 'share', 'doc'), os.path.join(prefix, 'share', 'info'),
+                os.path.join(prefix, 'share', 'man')]
 
         for dir in dirs:
             os.makedirs(dir, exist_ok=True)
