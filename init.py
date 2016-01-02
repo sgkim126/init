@@ -79,6 +79,36 @@ def config_git():
     try_and_catch(config_git_internal)
 
 
+def config_vim():
+    def config_vim_internal():
+        if not confirm('Do you want to config vim? (y/n) '):
+            return
+
+        url = 'https://github.com/sgkim126/dotvim.git'
+        home = os.getenv('HOME')
+        dotvim_path = os.path.join(home, '.vim')
+        dotvimrc_path = os.path.join(home, '.vimrc')
+        vimrc_path = os.path.join(dotvim_path, 'vimrc')
+
+        if os.path.exists(vimrc_path):
+            os.chdir(dotvim_path)
+            if not os.path.exists('./.git'):
+                subprocess.call(['git', 'init'])
+                subprocess.call(['git', 'remote', 'add', 'origin', url])
+            subprocess.call(['git', 'fetch', 'origin'])
+            subprocess.call(['git', 'rebase', 'origin', 'HEAD:master'])
+        else:
+            subprocess.call(['git', 'clone', url, dotvim_path])
+            os.chdir(dotvim_path)
+
+        if not os.path.exists(dotvimrc_path):
+            os.symlink(vimrc_path, dotvimrc_path)
+
+        subprocess.call(['vim', '+PlugInstall', '+qall'])
+
+    try_and_catch(config_vim_internal)
+
+
 def install(url, dirname, commands, env=None):
     if not confirm('Do you want to install %s? (y/n) ' % dirname):
         return
@@ -284,6 +314,7 @@ if __name__ == '__main__':
     initialize_root()
 
     config_git()
+    config_vim()
 
     install_virtualenv()
     install_cmake()
