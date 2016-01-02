@@ -169,8 +169,9 @@ if __name__ == '__main__':
         def install_commands(prefix, current_path):
             return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
                     % (prefix, prefix)]
+
         def get_env(prefix, current_path):
-            return { 'prefix': prefix, 'CURDIR': prefix }
+            return {'prefix': prefix, 'CURDIR': prefix}
         try_and_catch(partial(
             install,
             'https://github.com/git/git/archive/v2.6.4.tar.gz',
@@ -192,8 +193,9 @@ if __name__ == '__main__':
     if confirm('Do you want to install ant?(y/n) '):
         def install_commands(prefix, current_path):
             return ['./build.sh install-lite']
+
         def get_env(prefix, current_path):
-            return { 'ANT_HOME': prefix }
+            return {'ANT_HOME': prefix}
         try_and_catch(partial(
             install,
             'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
@@ -238,10 +240,10 @@ if __name__ == '__main__':
                 'scaladoc',
             ]
             join = os.path.join
-            source = lambda binary: os.path.join(source_path, binary)
-            destination = lambda binary: os.path.join(bin_path, binary)
-            return [ 'ln -s %s %s' % (source(binary), destination(binary))
-                    for binary in binaries ]
+            source = parital(os.path.join, source_path)
+            destination = parital(os.path.join, bin_path)
+            return ['ln -s %s %s' % (source(binary), destination(binary))
+                    for binary in binaries]
         try_and_catch(partial(
             install,
             'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz',
