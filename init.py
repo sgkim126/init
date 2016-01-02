@@ -8,6 +8,12 @@ import traceback
 import urllib.request
 
 
+HOME = os.getenv('HOME')
+PREFIX = os.path.join(HOME, '.root')
+OPT_PATH = os.path.join(PREFIX, 'opt')
+BIN_PATH = os.path.join(PREFIX, 'bin')
+
+
 def try_and_catch(function):
     try:
         function()
@@ -33,19 +39,16 @@ def initialize_root():
         if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
             return
 
-        home = os.getenv('HOME')
-        prefix = os.path.join(home, '.root')
-
         dirs = [
-            os.path.join(prefix, 'bin'),
-            os.path.join(prefix, 'include'),
-            os.path.join(prefix, 'lib'),
-            os.path.join(prefix, 'opt'),
-            os.path.join(prefix, 'tmp'),
-            os.path.join(prefix, 'var'),
-            os.path.join(prefix, 'share', 'doc'),
-            os.path.join(prefix, 'share', 'info'),
-            os.path.join(prefix, 'share', 'man')]
+            BIN_PATH,
+            os.path.join(PREFIX, 'include'),
+            os.path.join(PREFIX, 'lib'),
+            OPT_PATH,
+            os.path.join(PREFIX, 'tmp'),
+            os.path.join(PREFIX, 'var'),
+            os.path.join(PREFIX, 'share', 'doc'),
+            os.path.join(PREFIX, 'share', 'info'),
+            os.path.join(PREFIX, 'share', 'man')]
 
         for dir in dirs:
             os.makedirs(dir, exist_ok=True)
@@ -85,9 +88,8 @@ def config_vim():
             return
 
         url = 'https://github.com/sgkim126/dotvim.git'
-        home = os.getenv('HOME')
-        dotvim_path = os.path.join(home, '.vim')
-        dotvimrc_path = os.path.join(home, '.vimrc')
+        dotvim_path = os.path.join(HOME, '.vim')
+        dotvimrc_path = os.path.join(HOME, '.vimrc')
         vimrc_path = os.path.join(dotvim_path, 'vimrc')
 
         if os.path.exists(vimrc_path):
@@ -112,16 +114,13 @@ def config_vim():
 def install(url, dirname, commands, env=None):
     if not confirm('Do you want to install %s? (y/n) ' % dirname):
         return
-    home = os.getenv('HOME')
-    prefix = os.path.join(home, '.root')
-    opt = os.path.join(prefix, 'opt')
     seperator = os.sep
     tarname = url.split('/')[-1]
-    tarpath = os.path.join(opt, tarname)
-    path = os.path.join(opt, dirname)
+    tarpath = os.path.join(OPT_PATH, tarname)
+    path = os.path.join(OPT_PATH, dirname)
 
-    os.makedirs(opt, exist_ok=True)  # mkdir $HOME/.root/opt
-    os.chdir(opt)
+    os.makedirs(OPT_PATH, exist_ok=True)  # mkdir $HOME/.root/opt
+    os.chdir(OPT_PATH)
     if not os.path.exists(path):
         if not os.path.exists(tarpath):
             urllib.request.urlretrieve(url, tarname)
@@ -134,8 +133,8 @@ def install(url, dirname, commands, env=None):
             custom_environ = os.environ
         else:
             custom_environ = os.environ.copy()
-            custom_environ.update(env(prefix, path))
-        for command in commands(prefix, path):
+            custom_environ.update(env(PREFIX, path))
+        for command in commands(PREFIX, path):
             process = subprocess.Popen(command.split(' '), env=custom_environ)
             while process.wait() is None:
                 continue
@@ -153,7 +152,7 @@ def confirm(message):
 
 def install_virtualenv():
     def install_commands(prefix, current_path):
-        sym_path = os.path.join(prefix, 'bin', 'virtualenv')
+        sym_path = os.path.join(BIN_PATH, 'virtualenv')
         target = os.path.join(current_path, 'virtualenv.py')
         return ['rm -f %s' % sym_path,
                 'ln -s %s %s' % (target, sym_path)]
@@ -167,7 +166,7 @@ def install_virtualenv():
 
 def install_cmake():
     def install_commands(prefix, current_path):
-        return ['./configure --prefix=%s' % prefix,
+        return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
     try_and_catch(partial(
@@ -179,7 +178,7 @@ def install_cmake():
 
 def install_libtool():
     def install_commands(prefix, current_path):
-        return ['./configure --prefix=%s' % prefix,
+        return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
     try_and_catch(partial(
@@ -192,7 +191,7 @@ def install_libtool():
 def install_curl():
     def install_commands(prefix, current_path):
         return ['./buildconf',
-                './configure --prefix=%s' % prefix,
+                './configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
     try_and_catch(partial(
@@ -207,14 +206,14 @@ def install_git():
     def install_commands(prefix, current_path):
         new_work_dir = os.path.join(current_path, 'contrib', 'workdir',
                                     'git-new-workdir')
-        bin_dir = os.path.join(prefix, 'git-new-workdir')
+        bin_dir = os.path.join(PREFIX, 'git-new-workdir')
         return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
-                % (prefix, prefix),
+                % (PREFIX, PREFIX),
                 'rm -f %s' % bin_dir,
                 'ln -s %s %s' % (new_work_dir, bin_dir)]
 
     def get_env(prefix, current_path):
-        return {'prefix': prefix, 'CURDIR': prefix}
+        return {'prefix': PREFIX, 'CURDIR': PREFIX}
     try_and_catch(partial(
         install,
         'https://github.com/git/git/archive/v2.6.4.tar.gz',
@@ -225,7 +224,7 @@ def install_git():
 
 def install_node():
     def install_commands(prefix, current_path):
-        return ['./configure --prefix=%s' % prefix,
+        return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install']
     try_and_catch(partial(
@@ -240,7 +239,7 @@ def install_ant():
         return ['./build.sh install-lite']
 
     def get_env(prefix, current_path):
-        return {'ANT_HOME': prefix}
+        return {'ANT_HOME': PREFIX}
     try_and_catch(partial(
         install,
         'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
@@ -255,16 +254,15 @@ def install_sbt():
                'tools/generate_sbt.sh')
         script_name = url.split('/')[-1]
         script_path = os.path.join(current_path, script_name)
-        bin_path = os.path.join(prefix, 'bin')
-        sbt_path = os.path.join(bin_path, 'sbt')
+        sbt_path = os.path.join(BIN_PATH, 'sbt')
         return [
-            'mkdir %s' % bin_path,
+            'mkdir %s' % BIN_PATH,
             'rm -f %s' % script_path,
             'curl %s -o %s' % (url, script_path),
             'rm -f %s' % sbt_path,
             'touch %s' % sbt_path,
             'chmod u+x %s' % sbt_path,
-            'bash %s %s' % (script_path, prefix),
+            'bash %s %s' % (script_path, PREFIX),
             'rm -f %s' % script_path,
         ]
     try_and_catch(partial(
@@ -277,7 +275,7 @@ def install_sbt():
 
 def install_python():
     def install_commands(prefix, current_path):
-        return ['./configure --prefix=%s' % prefix,
+        return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install', ]
     try_and_catch(partial(
@@ -290,7 +288,6 @@ def install_python():
 def install_scala():
     def install_commands(prefix, current_path):
         source_path = os.path.join(current_path, 'bin')
-        bin_path = os.path.join(prefix, 'bin')
         binaries = [
             'scalac',
             'fsc',
@@ -299,7 +296,7 @@ def install_scala():
             'scaladoc',
         ]
         source = parital(os.path.join, source_path)
-        destination = parital(os.path.join, bin_path)
+        destination = parital(os.path.join, BIN_PATH)
         return ['ln -s %s %s' % (source(binary), destination(binary))
                 for binary in binaries]
     try_and_catch(partial(
