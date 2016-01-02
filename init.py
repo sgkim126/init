@@ -249,3 +249,14 @@ if __name__ == '__main__':
             'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz',
             'scala-2.11.7',
             install_commands))
+
+    if confirm('Do you want to install python?(y/n) '):
+        def install_commands(prefix, current_path):
+            return ['./configure --prefix=%s' % prefix,
+                    'make',
+                    'make install', ]
+        try_and_catch(partial(
+            install,
+            'https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz',
+            'Python-3.5.1',
+            install_commands))
