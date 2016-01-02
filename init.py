@@ -16,51 +16,67 @@ def try_and_catch(function):
         traceback.print_exc(file=sys.stdout)
 
 
-def apt_get_install(*packages):
-    subprocess.call(['sudo', 'apt-get', 'update'])
-    subprocess.call(['sudo', 'apt-get', 'upgrade', '-y'])
-    apt_get_command_without_target = ['sudo', 'apt-get', 'install', '-y']
-    for package in packages:
-        subprocess.call(apt_get_command_without_target + package)
+def apt_install(*packages):
+    def apt_internal():
+        if not confirm('Do you want to install packages with sudo?(y/n) '):
+            return
+        subprocess.call(['sudo', 'apt-get', 'update'])
+        subprocess.call(['sudo', 'apt-get', 'upgrade', '-y'])
+        apt_get_command_without_target = ['sudo', 'apt-get', 'install', '-y']
+        for package in packages:
+            subprocess.call(apt_get_command_without_target + package)
+    try_and_catch(apt_internal)
 
 
 def initialize_root():
-    home = os.getenv('HOME')
-    prefix = os.path.join(home, '.root')
+    def initialize_root_internal():
+        if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
+            return
 
-    dirs = []
-    dirs.append(os.path.join(prefix, 'bin'))
-    dirs.append(os.path.join(prefix, 'include'))
-    dirs.append(os.path.join(prefix, 'lib'))
-    dirs.append(os.path.join(prefix, 'opt'))
-    dirs.append(os.path.join(prefix, 'tmp'))
-    dirs.append(os.path.join(prefix, 'var'))
-    dirs.append(os.path.join(prefix, 'share', 'doc'))
-    dirs.append(os.path.join(prefix, 'share', 'info'))
-    dirs.append(os.path.join(prefix, 'share', 'man'))
+        home = os.getenv('HOME')
+        prefix = os.path.join(home, '.root')
 
-    for dir in dirs:
-        os.makedirs(dir, exist_ok=True)
+        dirs = []
+        dirs.append(os.path.join(prefix, 'bin'))
+        dirs.append(os.path.join(prefix, 'include'))
+        dirs.append(os.path.join(prefix, 'lib'))
+        dirs.append(os.path.join(prefix, 'opt'))
+        dirs.append(os.path.join(prefix, 'tmp'))
+        dirs.append(os.path.join(prefix, 'var'))
+        dirs.append(os.path.join(prefix, 'share', 'doc'))
+        dirs.append(os.path.join(prefix, 'share', 'info'))
+        dirs.append(os.path.join(prefix, 'share', 'man'))
+
+        for dir in dirs:
+            os.makedirs(dir, exist_ok=True)
+
+    try_and_catch(initialize_root_internal)
 
 
-def git_config():
-    def global_config(attribute, value):
-        subprocess.call(['git', 'config', '--global'] + [attribute, value])
-    global_config('color.ui', 'auto')
-    global_config('color.ui', 'auto')
-    global_config('core.editor', 'vim')
-    global_config('core.excludefile', '~/.gitignore')
-    global_config('diff.noprefix', 'true')
+def config_git():
+    def config_git_internal():
+        if not confirm('Do you want to config git? (y/n) '):
+            return
 
-    name = input("Enter your name for git: ")
-    if name != '':
-        global_config('user.name', name)
-    mail = input("Enter your mail address for git: ")
-    if mail != '':
-        global_config('user.email', mail)
-    username = input("Enter your github username: ")
-    if username != '':
-        global_config('github.user', username)
+        def global_config(attribute, value):
+            subprocess.call(['git', 'config', '--global'] + [attribute, value])
+
+        global_config('color.ui', 'auto')
+        global_config('color.ui', 'auto')
+        global_config('core.editor', 'vim')
+        global_config('core.excludefile', '~/.gitignore')
+        global_config('diff.noprefix', 'true')
+
+        name = input("Enter your name for git: ")
+        if name != '':
+            global_config('user.name', name)
+        mail = input("Enter your mail address for git: ")
+        if mail != '':
+            global_config('user.email', mail)
+        username = input("Enter your github username: ")
+        if username != '':
+            global_config('github.user', username)
+    try_and_catch(config_git_internal)
 
 
 def install(url, dirname, commands, env=None):
@@ -258,15 +274,11 @@ def install_scala():
         install_commands))
 
 if __name__ == '__main__':
-    if confirm('Do you want to install packages with sudo?(y/n) '):
-        try_and_catch(partial(
-            apt_get_install, 'build-essential', 'clang'))
+    apt_install('build-essential', 'clang')
 
-    if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
-        try_and_catch(initialize_root)
+    initialize_root()
 
-    if confirm('Do you want to config git?(y/n) '):
-        try_and_catch(git_config)
+    config_git()
 
     install_virtualenv()
     install_cmake()
