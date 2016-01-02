@@ -67,7 +67,7 @@ def config_git():
         global_config('color.ui', 'auto')
         global_config('color.ui', 'auto')
         global_config('core.editor', 'vim')
-        global_config('core.excludefile', '~/.gitignore')
+        global_config('core.excludesfile', '~/.gitignore')
         global_config('diff.noprefix', 'true')
 
         name = input("Enter your name for git: ")
