@@ -35,11 +35,9 @@ def initialize_root():
     dirs.append(os.path.join(prefix, 'opt'))
     dirs.append(os.path.join(prefix, 'tmp'))
     dirs.append(os.path.join(prefix, 'var'))
-    share = os.path.join(prefix, 'share')
-    dirs.append(share)
-    dirs.append(os.path.join(share, 'doc'))
-    dirs.append(os.path.join(share, 'info'))
-    dirs.append(os.path.join(share, 'man'))
+    dirs.append(os.path.join(prefix, 'share', 'doc'))
+    dirs.append(os.path.join(prefix, 'share', 'info'))
+    dirs.append(os.path.join(prefix, 'share', 'man'))
 
     for dir in dirs:
         os.makedirs(dir, exist_ok=True)
@@ -109,8 +107,7 @@ def confirm(message):
 
 def install_virtualenv():
     def install_commands(prefix, current_path):
-        bin_path = os.path.join(prefix, 'bin')
-        sym_path = os.path.join(bin_path, 'virtualenv')
+        sym_path = os.path.join(prefix, 'bin', 'virtualenv')
         target = os.path.join(current_path, 'virtualenv.py')
         return ['rm -f %s' % sym_path,
                 'ln -s %s %s' % (target, sym_path)]
@@ -250,7 +247,6 @@ def install_scala():
             'scalap',
             'scaladoc',
         ]
-        join = os.path.join
         source = parital(os.path.join, source_path)
         destination = parital(os.path.join, bin_path)
         return ['ln -s %s %s' % (source(binary), destination(binary))
