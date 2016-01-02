@@ -1,4 +1,4 @@
-# init
+# init [![Build Status](https://travis-ci.org/sgkim126/init.svg?branch=master)](https://travis-ci.org/sgkim126/init)
 Initialize environment.
 * Install packages with apt
 * Initialize $HOME/.root
