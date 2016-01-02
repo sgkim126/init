@@ -66,6 +66,8 @@ def git_config():
 
 
 def install(url, dirname, commands, env=None):
+    if not confirm('Do you want to install %s? (y/n) ' % dirname):
+        return
     home = os.getenv('HOME')
     prefix = os.path.join(home, '.root')
     opt = os.path.join(prefix, 'opt')
@@ -105,6 +107,160 @@ def confirm(message):
             return False
 
 
+def install_virtualenv():
+    def install_commands(prefix, current_path):
+        bin_path = os.path.join(prefix, 'bin')
+        sym_path = os.path.join(bin_path, 'virtualenv')
+        target = os.path.join(current_path, 'virtualenv.py')
+        return ['rm -f %s' % sym_path,
+                'ln -s %s %s' % (target, sym_path)]
+    try_and_catch(partial(
+        install,
+        ('https://pypi.python.org/packages/source/v/virtualenv/'
+         'virtualenv-13.1.2.tar.gz'),
+        'virtualenv-13.1.2',
+        install_commands))
+
+
+def install_cmake():
+    def install_commands(prefix, current_path):
+        return ['./configure --prefix=%s' % prefix,
+                'make',
+                'make install']
+    try_and_catch(partial(
+        install,
+        'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
+        'cmake-3.4.1',
+        install_commands))
+
+
+def install_libtool():
+    def install_commands(prefix, current_path):
+        return ['./configure --prefix=%s' % prefix,
+                'make',
+                'make install']
+    try_and_catch(partial(
+        install,
+        'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
+        'libtool-2.4.6',
+        install_commands))
+
+
+def install_curl():
+    def install_commands(prefix, current_path):
+        return ['./buildconf',
+                './configure --prefix=%s' % prefix,
+                'make',
+                'make install']
+    try_and_catch(partial(
+        install,
+        ('https://github.com/bagder/curl/releases/download/curl-7_46_0/'
+         'curl-7.46.0.tar.gz'),
+        'curl-7.46.0',
+        install_commands))
+
+
+def install_git():
+    def install_commands(prefix, current_path):
+        return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
+                % (prefix, prefix)]
+
+    def get_env(prefix, current_path):
+        return {'prefix': prefix, 'CURDIR': prefix}
+    try_and_catch(partial(
+        install,
+        'https://github.com/git/git/archive/v2.6.4.tar.gz',
+        'git-2.6.4',
+        install_commands,
+        get_env))
+
+
+def install_node():
+    def install_commands(prefix, current_path):
+        return ['./configure --prefix=%s' % prefix,
+                'make',
+                'make install']
+    try_and_catch(partial(
+        install,
+        'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
+        'node-5.3.0',
+        install_commands))
+
+
+def install_ant():
+    def install_commands(prefix, current_path):
+        return ['./build.sh install-lite']
+
+    def get_env(prefix, current_path):
+        return {'ANT_HOME': prefix}
+    try_and_catch(partial(
+        install,
+        'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
+        'apache-ant-1.9.6',
+        install_commands,
+        get_env))
+
+
+def install_sbt():
+    def install_commands(prefix, current_path):
+        url = ('https://raw.githubusercontent.com/sgkim126/init/master/'
+               'tools/generate_sbt.sh')
+        script_name = url.split('/')[-1]
+        script_path = os.path.join(current_path, script_name)
+        bin_path = os.path.join(prefix, 'bin')
+        sbt_path = os.path.join(bin_path, 'sbt')
+        return [
+            'mkdir %s' % bin_path,
+            'rm -f %s' % script_path,
+            'curl %s -o %s' % (url, script_path),
+            'rm -f %s' % sbt_path,
+            'touch %s' % sbt_path,
+            'chmod u+x %s' % sbt_path,
+            'bash %s %s' % (script_path, prefix),
+            'rm -f %s' % script_path,
+        ]
+    try_and_catch(partial(
+        install,
+        ('https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/'
+         'sbt-0.13.9.tgz'),
+        'sbt',
+        install_commands))
+
+
+def install_python():
+    def install_commands(prefix, current_path):
+        return ['./configure --prefix=%s' % prefix,
+                'make',
+                'make install', ]
+    try_and_catch(partial(
+        install,
+        'https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz',
+        'Python-3.5.1',
+        install_commands))
+
+
+def install_scala():
+    def install_commands(prefix, current_path):
+        source_path = os.path.join(current_path, 'bin')
+        bin_path = os.path.join(prefix, 'bin')
+        binaries = [
+            'scalac',
+            'fsc',
+            'scala',
+            'scalap',
+            'scaladoc',
+        ]
+        join = os.path.join
+        source = parital(os.path.join, source_path)
+        destination = parital(os.path.join, bin_path)
+        return ['ln -s %s %s' % (source(binary), destination(binary))
+                for binary in binaries]
+    try_and_catch(partial(
+        install,
+        'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz',
+        'scala-2.11.7',
+        install_commands))
+
 if __name__ == '__main__':
     if confirm('Do you want to install packages with sudo?(y/n) '):
         try_and_catch(partial(
@@ -116,147 +272,13 @@ if __name__ == '__main__':
     if confirm('Do you want to config git?(y/n) '):
         try_and_catch(git_config)
 
-    if confirm('Do you want to install virtualenv?(y/n) '):
-        def install_virtualenv_command(prefix, current_path):
-            bin_path = os.path.join(prefix, 'bin')
-            sym_path = os.path.join(bin_path, 'virtualenv')
-            target = os.path.join(current_path, 'virtualenv.py')
-            return ['rm -f %s' % sym_path,
-                    'ln -s %s %s' % (target, sym_path)]
-        try_and_catch(partial(
-            install,
-            ('https://pypi.python.org/packages/source/v/virtualenv/'
-             'virtualenv-13.1.2.tar.gz'),
-            'virtualenv-13.1.2',
-            install_virtualenv_command))
-
-    if confirm('Do you want to install cmake?(y/n) '):
-        def install_cmake(prefix, current_path):
-            return ['./configure --prefix=%s' % prefix,
-                    'make',
-                    'make install']
-        try_and_catch(partial(
-            install,
-            'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
-            'cmake-3.4.1',
-            install_cmake))
-
-    if confirm('Do you want to install libtool?(y/n) '):
-        def install_libtool(prefix, current_path):
-            return ['./configure --prefix=%s' % prefix,
-                    'make',
-                    'make install']
-        try_and_catch(partial(
-            install,
-            'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
-            'libtool-2.4.6',
-            install_libtool))
-
-    if confirm('Do you want to install curl?(y/n) '):
-        def install_commands(prefix, current_path):
-            return ['./buildconf',
-                    './configure --prefix=%s' % prefix,
-                    'make',
-                    'make install']
-        try_and_catch(partial(
-            install,
-            ('https://github.com/bagder/curl/releases/download/curl-7_46_0/'
-             'curl-7.46.0.tar.gz'),
-            'curl-7.46.0',
-            install_commands))
-
-    if confirm('Do you want to install git?(y/n) '):
-        def install_commands(prefix, current_path):
-            return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
-                    % (prefix, prefix)]
-
-        def get_env(prefix, current_path):
-            return {'prefix': prefix, 'CURDIR': prefix}
-        try_and_catch(partial(
-            install,
-            'https://github.com/git/git/archive/v2.6.4.tar.gz',
-            'git-2.6.4',
-            install_commands,
-            get_env))
-
-    if confirm('Do you want to install node.js?(y/n) '):
-        def install_commands(prefix, current_path):
-            return ['./configure --prefix=%s' % prefix,
-                    'make',
-                    'make install']
-        try_and_catch(partial(
-            install,
-            'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
-            'node-5.3.0',
-            install_commands))
-
-    if confirm('Do you want to install ant?(y/n) '):
-        def install_commands(prefix, current_path):
-            return ['./build.sh install-lite']
-
-        def get_env(prefix, current_path):
-            return {'ANT_HOME': prefix}
-        try_and_catch(partial(
-            install,
-            'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
-            'apache-ant-1.9.6',
-            install_commands,
-            get_env))
-
-    if confirm('Do you want to install sbt?(y/n) '):
-        def install_commands(prefix, current_path):
-            url = ('https://raw.githubusercontent.com/sgkim126/init/master/'
-                   'tools/generate_sbt.sh')
-            script_name = url.split('/')[-1]
-            script_path = os.path.join(current_path, script_name)
-            bin_path = os.path.join(prefix, 'bin')
-            sbt_path = os.path.join(bin_path, 'sbt')
-            return [
-                'mkdir %s' % bin_path,
-                'rm -f %s' % script_path,
-                'curl %s -o %s' % (url, script_path),
-                'rm -f %s' % sbt_path,
-                'touch %s' % sbt_path,
-                'chmod u+x %s' % sbt_path,
-                'bash %s %s' % (script_path, prefix),
-                'rm -f %s' % script_path,
-            ]
-        try_and_catch(partial(
-            install,
-            ('https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/'
-             'sbt-0.13.9.tgz'),
-            'sbt',
-            install_commands))
-
-    if confirm('Do you want to install scala?(y/n) '):
-        def install_commands(prefix, current_path):
-            source_path = os.path.join(current_path, 'bin')
-            bin_path = os.path.join(prefix, 'bin')
-            binaries = [
-                'scalac',
-                'fsc',
-                'scala',
-                'scalap',
-                'scaladoc',
-            ]
-            join = os.path.join
-            source = parital(os.path.join, source_path)
-            destination = parital(os.path.join, bin_path)
-            return ['ln -s %s %s' % (source(binary), destination(binary))
-                    for binary in binaries]
-        try_and_catch(partial(
-            install,
-            'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz',
-            'scala-2.11.7',
-            install_commands))
-
-    if confirm('Do you want to install python?(y/n) '):
-        def install_commands(prefix, current_path):
-            return ['./configure --prefix=%s' % prefix,
-                    'make',
-                    'make install', ]
-        try_and_catch(partial(
-            install,
-            'https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz',
-            'Python-3.5.1',
-            install_commands))
+    install_virtualenv()
+    install_cmake()
+    install_libtool()
+    install_curl()
+    install_git()
+    install_node()
+    install_ant()
+    install_sbt()
+    install_scala()
+    install_python()
