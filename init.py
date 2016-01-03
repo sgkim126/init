@@ -114,6 +114,25 @@ def config_vim():
     try_and_catch(config_vim_internal)
 
 
+def config_home():
+    def config_home_internal():
+        if not confirm('Do you want to config home? (y/n) '):
+            return
+        OPT_PATH = os.path.join(PREFIX, 'opt')
+        dotfiles_path = os.path.join(OPT_PATH, 'dotfiles')
+        url = 'https://github.com/sgkim126/dotfiles.git'
+        clone_git_repository(dotfiles_path, url)
+        dothome = os.path.join(dotfiles_path, 'home')
+        files = os.listdir(dothome)
+        for file in files:
+            filename = '.%s' % file
+            symfile = os.path.join(HOME, filename)
+            os.remove(symfile)
+            os.symlink(os.path.join(dothome, file), symfile)
+
+    try_and_catch(config_home_internal)
+
+
 def install(url, dirname, commands, env=None):
     if not confirm('Do you want to install %s? (y/n) ' % dirname):
         return
@@ -313,6 +332,7 @@ if __name__ == '__main__':
 
     initialize_root()
 
+    config_home()
     config_git()
     config_vim()
 
