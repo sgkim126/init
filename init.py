@@ -104,8 +104,9 @@ def config_vim():
         dotvimrc_path = os.path.join(HOME, '.vimrc')
         vimrc_path = os.path.join(dotvim_path, 'vimrc')
 
-        if not os.path.exists(dotvimrc_path):
-            os.symlink(vimrc_path, dotvimrc_path)
+        if os.path.exists(dotvimrc_path):
+            os.remove(dotvimrc_path)
+        os.symlink(vimrc_path, dotvimrc_path)
 
         subprocess.call(['vim', '+PlugInstall', '+qall'])
 
