@@ -82,6 +82,16 @@ def config_git():
     try_and_catch(config_git_internal)
 
 
+def clone_git_repository(path, url):
+    os.makedirs(path, exist_ok=True)
+    os.chdir(path)
+    if not os.path.exists('./.git'):
+        subprocess.call(['git', 'init'])
+        subprocess.call(['git', 'remote', 'add', 'origin', url])
+    subprocess.call(['git', 'fetch', 'origin'])
+    subprocess.call(['git', 'reset', '--hard', 'origin/master'])
+
+
 def config_vim():
     def config_vim_internal():
         if not confirm('Do you want to config vim? (y/n) '):
@@ -89,19 +99,10 @@ def config_vim():
 
         url = 'https://github.com/sgkim126/dotvim.git'
         dotvim_path = os.path.join(HOME, '.vim')
+        clone_git_repository(dotvim_path, url)
+
         dotvimrc_path = os.path.join(HOME, '.vimrc')
         vimrc_path = os.path.join(dotvim_path, 'vimrc')
-
-        if os.path.exists(vimrc_path):
-            os.chdir(dotvim_path)
-            if not os.path.exists('./.git'):
-                subprocess.call(['git', 'init'])
-                subprocess.call(['git', 'remote', 'add', 'origin', url])
-            subprocess.call(['git', 'fetch', 'origin'])
-            subprocess.call(['git', 'rebase', 'origin', 'HEAD:master'])
-        else:
-            subprocess.call(['git', 'clone', url, dotvim_path])
-            os.chdir(dotvim_path)
 
         if not os.path.exists(dotvimrc_path):
             os.symlink(vimrc_path, dotvimrc_path)
