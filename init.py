@@ -36,7 +36,8 @@ def apt_install(*packages):
 
 def initialize_root():
     def initialize_root_internal():
-        if confirm('Do you want to initialize $HOME/.root directory?(y/n) '):
+        question = 'Do you want to initialize $HOME/.root directory? (y/n) '
+        if not confirm(question):
             return
 
         dirs = [
