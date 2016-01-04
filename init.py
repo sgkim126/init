@@ -189,7 +189,7 @@ def install_virtualenv():
 def install_cmake():
     def install_commands(current_path):
         return ['./configure --prefix=%s' % PREFIX,
-                'make',
+                'make -- -DCMAKE_USE_OPENSSL=ON',
                 'make install']
     try_and_catch(partial(
         install,
