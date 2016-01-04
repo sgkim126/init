@@ -228,11 +228,11 @@ def install_git():
     def install_commands(current_path):
         new_work_dir = os.path.join(current_path, 'contrib', 'workdir',
                                     'git-new-workdir')
-        bin_dir = os.path.join(PREFIX, 'git-new-workdir')
+        bin_dir = os.path.join(PREFIX, 'bin', 'git-new-workdir')
         return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
                 % (PREFIX, PREFIX),
                 'rm -f %s' % bin_dir,
-                'ln -s %s %s' % (new_work_dir, bin_dir)]
+                'cp -f %s %s' % (new_work_dir, bin_dir)]
 
     def get_env(current_path):
         return {'prefix': PREFIX, 'CURDIR': PREFIX}
