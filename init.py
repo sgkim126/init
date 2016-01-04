@@ -327,6 +327,20 @@ def install_scala():
         'scala-2.11.7',
         install_commands))
 
+
+def install_neovim():
+    def install_commands(current_path):
+        install_prefix = '-DCMAKE_INSTALL_PREFIX=%s' % PREFIX
+        flags = 'CMAKE_EXTRA_FLAGS+="%s"' % install_prefix
+        build_type = 'CMAKE_BUILD_TYPE="Release"'
+        return ['make %s %s' % (flags, build_type),
+                'make install']
+    try_and_catch(partial(
+        install,
+        'https://github.com/neovim/neovim/archive/v0.1.1.tar.gz',
+        'neovim-0.1.1',
+        install_commands))
+
 if __name__ == '__main__':
     apt_install('build-essential', 'clang')
 
@@ -346,3 +360,4 @@ if __name__ == '__main__':
     install_sbt()
     install_scala()
     install_python()
+    install_neovim()
