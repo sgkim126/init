@@ -341,6 +341,19 @@ def install_neovim():
         'neovim-0.1.1',
         install_commands))
 
+
+def install_go():
+    def install_commands(current_path):
+        go_path = os.path.join(PREFIX, 'go')
+        return ['rm -rf %s' % go_path,
+                'cp -rf %s %s' % (current_path, go_path)]
+    try_and_catch(partial(
+        install,
+        'https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz',
+        'go',
+        install_commands))
+
+
 if __name__ == '__main__':
     apt_install('build-essential', 'clang')
 
@@ -361,3 +374,4 @@ if __name__ == '__main__':
     install_scala()
     install_python()
     install_neovim()
+    install_go()
