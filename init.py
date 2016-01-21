@@ -12,7 +12,7 @@ HOME = os.getenv('HOME')
 PREFIX = os.path.join(HOME, '.root')
 OPT_PATH = os.path.join(PREFIX, 'opt')
 BIN_PATH = os.path.join(PREFIX, 'bin')
-p
+
 
 def try_and_catch(function):
     try:
