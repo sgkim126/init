@@ -253,7 +253,7 @@ def install_node():
     try_and_catch(partial(
         install,
         'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
-        'node-5.3.0',
+        'node-v5.3.0',
         install_commands))
 
 
