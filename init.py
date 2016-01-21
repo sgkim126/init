@@ -127,7 +127,8 @@ def config_home():
         for file in files:
             filename = '.%s' % file
             symfile = os.path.join(HOME, filename)
-            os.remove(symfile)
+            if os.path.exists(symfile):
+                os.remove(symfile)
             os.symlink(os.path.join(dothome, file), symfile)
 
     try_and_catch(config_home_internal)
