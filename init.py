@@ -12,7 +12,7 @@ HOME = os.getenv('HOME')
 PREFIX = os.path.join(HOME, '.root')
 OPT_PATH = os.path.join(PREFIX, 'opt')
 BIN_PATH = os.path.join(PREFIX, 'bin')
-
+p
 
 def try_and_catch(function):
     try:
@@ -318,8 +318,8 @@ def install_scala():
             'scalap',
             'scaladoc',
         ]
-        source = parital(os.path.join, source_path)
-        destination = parital(os.path.join, BIN_PATH)
+        source = partial(os.path.join, source_path)
+        destination = partial(os.path.join, BIN_PATH)
         return ['ln -s %s %s' % (source(binary), destination(binary))
                 for binary in binaries]
     try_and_catch(partial(
