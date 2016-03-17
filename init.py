@@ -310,22 +310,14 @@ def install_python():
 
 def install_scala():
     def install_commands(current_path):
-        source_path = os.path.join(current_path, 'bin')
-        binaries = [
-            'scalac',
-            'fsc',
-            'scala',
-            'scalap',
-            'scaladoc',
-        ]
-        source = partial(os.path.join, source_path)
-        destination = partial(os.path.join, BIN_PATH)
-        return ['ln -s %s %s' % (source(binary), destination(binary))
-                for binary in binaries]
+        scala_path = os.path.join(PREFIX, 'scala')
+        return ['rm -rf %s' % scala_path,
+                'cp -rf %s %s' % (current_path, scala_path),
+                'rm -rf %s' % current_path]
     try_and_catch(partial(
         install,
-        'http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.tgz',
-        'scala-2.11.7',
+        'http://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.tgz',
+        'scala-2.11.8',
         install_commands))
 
 
