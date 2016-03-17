@@ -259,16 +259,16 @@ def install_node():
 
 def install_ant():
     def install_commands(current_path):
-        return ['./build.sh install-lite']
+        ant_home = os.path.join(PREFIX, 'ant')
+        return ['rm -rf %s' % ant_home,
+                'cp -rf %s %s' % (current_path, ant_home),
+                'rm -rf %s' % current_path,]
 
-    def get_env(current_path):
-        return {'ANT_HOME': PREFIX}
     try_and_catch(partial(
         install,
-        'http://apache.tt.co.kr//ant/source/apache-ant-1.9.6-src.tar.gz',
+        'http://apache.tt.co.kr//ant/binaries/apache-ant-1.9.6-bin.tar.gz',
         'apache-ant-1.9.6',
-        install_commands,
-        get_env))
+        install_commands))
 
 
 def install_sbt():
