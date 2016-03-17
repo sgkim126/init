@@ -351,7 +351,7 @@ def install_go():
                 'mkdir %s' % os.path.join(HOME, '.go')]
     try_and_catch(partial(
         install,
-        'https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz',
+        'https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz',
         'go',
         install_commands))
 
