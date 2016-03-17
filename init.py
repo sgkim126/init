@@ -247,13 +247,14 @@ def install_git():
 
 def install_node():
     def install_commands(current_path):
-        return ['./configure --prefix=%s' % PREFIX,
-                'make',
-                'make install']
+        node_home = os.path.join(PREFIX, 'node')
+        return ['rm -rf %s' % node_home,
+                'cp -rf %s %s' % (current_path, node_home),
+                'rm -rf %s' % current_path,]
     try_and_catch(partial(
         install,
-        'https://nodejs.org/dist/v5.3.0/node-v5.3.0.tar.gz',
-        'node-v5.3.0',
+        'https://nodejs.org/dist/v5.9.0/node-v5.9.0-linux-x64.tar.xz',
+        'node-v5.9.0-linux-x64',
         install_commands))
 
 
