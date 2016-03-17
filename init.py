@@ -204,7 +204,8 @@ def install_libtool():
     def install_commands(current_path):
         return ['./configure --prefix=%s' % PREFIX,
                 'make',
-                'make install']
+                'make install',
+                'rm -rf %s' % current_path,]
     try_and_catch(partial(
         install,
         'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
@@ -217,7 +218,8 @@ def install_curl():
         return ['./buildconf',
                 './configure --prefix=%s --with-ssl' % PREFIX,
                 'make',
-                'make install']
+                'make install',
+                'rm -rf %s' % current_path,]
     try_and_catch(partial(
         install,
         'https://curl.haxx.se/download/curl-7.47.1.tar.gz',
@@ -233,7 +235,8 @@ def install_git():
         return ['make prefix=%s CURLDIR=%s NO_R_TO_GCC_LINKER=1 install'
                 % (PREFIX, PREFIX),
                 'rm -f %s' % bin_dir,
-                'cp -f %s %s' % (new_work_dir, bin_dir)]
+                'cp -f %s %s' % (new_work_dir, bin_dir),
+                'rm -rf %s' % current_path,]
 
     def get_env(current_path):
         return {'prefix': PREFIX, 'CURDIR': PREFIX}
