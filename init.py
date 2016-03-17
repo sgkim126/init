@@ -358,6 +358,19 @@ def install_go():
         install_commands))
 
 
+def install_hadoop():
+    def install_commands(current_path):
+        hadoop_home = os.path.join(PREFIX, 'hadoop')
+        return ['rm -rf %s' % hadoop_home,
+                'cp -rf %s %s' % (current_path, hadoop_home),
+                'rm -rf %s' % current_path,]
+    try_and_catch(partial(
+        install,
+        'http://apache.mirror.cdnetworks.com/hadoop/common/hadoop-2.7.2/hadoop-2.7.2.tar.gz',
+        'hadoop-2.7.2',
+        install_commands))
+
+
 if __name__ == '__main__':
     apt_install('build-essential', 'clang')
 
@@ -379,3 +392,4 @@ if __name__ == '__main__':
     install_python()
     install_neovim()
     install_go()
+    install_hadoop()
