@@ -192,7 +192,7 @@ def install_cmake():
         cmake_path = os.path.join(PREFIX, 'cmake')
         return ['rm -rf %s' % cmake_path,
                 'cp -rf %s %s' % (current_path, cmake_path),
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
         'https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.tar.gz',
@@ -205,7 +205,7 @@ def install_libtool():
         return ['./configure --prefix=%s' % PREFIX,
                 'make',
                 'make install',
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
         'http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz',
@@ -219,7 +219,7 @@ def install_curl():
                 './configure --prefix=%s --with-ssl' % PREFIX,
                 'make',
                 'make install',
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
         'https://curl.haxx.se/download/curl-7.47.1.tar.gz',
@@ -236,7 +236,7 @@ def install_git():
                 % (PREFIX, PREFIX),
                 'rm -f %s' % bin_dir,
                 'cp -f %s %s' % (new_work_dir, bin_dir),
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
 
     def get_env(current_path):
         return {'prefix': PREFIX, 'CURDIR': PREFIX}
@@ -253,7 +253,7 @@ def install_node():
         node_home = os.path.join(PREFIX, 'node')
         return ['rm -rf %s' % node_home,
                 'cp -rf %s %s' % (current_path, node_home),
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
         'https://nodejs.org/dist/v5.9.0/node-v5.9.0-linux-x64.tar.xz',
@@ -266,7 +266,7 @@ def install_ant():
         ant_home = os.path.join(PREFIX, 'ant')
         return ['rm -rf %s' % ant_home,
                 'cp -rf %s %s' % (current_path, ant_home),
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
 
     try_and_catch(partial(
         install,
@@ -363,10 +363,11 @@ def install_hadoop():
         hadoop_home = os.path.join(PREFIX, 'hadoop')
         return ['rm -rf %s' % hadoop_home,
                 'cp -rf %s %s' % (current_path, hadoop_home),
-                'rm -rf %s' % current_path,]
+                'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'http://apache.mirror.cdnetworks.com/hadoop/common/hadoop-2.7.2/hadoop-2.7.2.tar.gz',
+        ('http://apache.mirror.cdnetworks.com/hadoop/common/hadoop-2.7.2/'
+         'hadoop-2.7.2.tar.gz'),
         'hadoop-2.7.2',
         install_commands))
 
