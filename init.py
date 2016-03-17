@@ -189,13 +189,14 @@ def install_virtualenv():
 
 def install_cmake():
     def install_commands(current_path):
-        return ['./configure --prefix=%s' % PREFIX,
-                'make -- -DCMAKE_USE_OPENSSL=ON',
-                'make install']
+        cmake_path = os.path.join(PREFIX, 'cmake')
+        return ['rm -rf %s' % cmake_path,
+                'cp -rf %s %s' % (current_path, cmake_path),
+                'rm -rf %s' % current_path,]
     try_and_catch(partial(
         install,
-        'https://cmake.org/files/v3.4/cmake-3.4.1.tar.gz',
-        'cmake-3.4.1',
+        'https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.tar.gz',
+        'cmake-3.5.0-Linux-i386',
         install_commands))
 
 
