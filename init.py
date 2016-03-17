@@ -182,8 +182,8 @@ def install_virtualenv():
     try_and_catch(partial(
         install,
         ('https://pypi.python.org/packages/source/v/virtualenv/'
-         'virtualenv-13.1.2.tar.gz'),
-        'virtualenv-13.1.2',
+         'virtualenv-15.0.0.tar.gz'),
+        'virtualenv-15.0.0',
         install_commands))
 
 
