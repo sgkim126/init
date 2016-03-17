@@ -214,14 +214,13 @@ def install_libtool():
 def install_curl():
     def install_commands(current_path):
         return ['./buildconf',
-                './configure --prefix=%s' % PREFIX,
+                './configure --prefix=%s --with-ssl' % PREFIX,
                 'make',
                 'make install']
     try_and_catch(partial(
         install,
-        ('https://github.com/bagder/curl/releases/download/curl-7_46_0/'
-         'curl-7.46.0.tar.gz'),
-        'curl-7.46.0',
+        'https://curl.haxx.se/download/curl-7.47.1.tar.gz',
+        'curl-7.47.1',
         install_commands))
 
 
