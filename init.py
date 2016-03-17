@@ -348,7 +348,8 @@ def install_go():
         go_path = os.path.join(PREFIX, 'go')
         return ['rm -rf %s' % go_path,
                 'cp -rf %s %s' % (current_path, go_path),
-                'mkdir %s' % os.path.join(HOME, '.go')]
+                'rm -rf %s' % current_path,
+                'mkdir -p %s' % os.path.join(HOME, '.go')]
     try_and_catch(partial(
         install,
         'https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz',
