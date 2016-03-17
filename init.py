@@ -278,20 +278,25 @@ def install_sbt():
         script_name = url.split('/')[-1]
         script_path = os.path.join(current_path, script_name)
         sbt_path = os.path.join(BIN_PATH, 'sbt')
+        jar_file = os.path.join(BIN_PATH, 'sbt-launch.jar')
         return [
-            'mkdir %s' % BIN_PATH,
+            'mkdir -p %s' % BIN_PATH,
             'rm -f %s' % script_path,
             'curl %s -o %s' % (url, script_path),
             'rm -f %s' % sbt_path,
             'touch %s' % sbt_path,
             'chmod u+x %s' % sbt_path,
+            'rm -f %s' % jar_file,
+            'cp %s %s' % (os.path.join(current_path, 'bin', 'sbt-launch.jar'),
+                          jar_file),
             'bash %s %s' % (script_path, PREFIX),
             'rm -f %s' % script_path,
+            'rm -rf %s' % current_path,
         ]
     try_and_catch(partial(
         install,
-        ('https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/'
-         'sbt-0.13.9.tgz'),
+        ('https://dl.bintray.com/sbt/native-packages/sbt/0.13.11/'
+         'sbt-0.13.11.tgz'),
         'sbt',
         install_commands))
 
