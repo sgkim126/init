@@ -305,15 +305,16 @@ def install_sbt():
         install_commands))
 
 
-def install_python():
+def install_pyenv():
     def install_commands(current_path):
-        return ['./configure --prefix=%s' % PREFIX,
-                'make',
-                'make install', ]
+        cmake_path = os.path.join(PREFIX, 'pyenv')
+        return ['rm -rf %s' % cmake_path,
+                'cp -rf %s %s' % (current_path, cmake_path),
+                'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz',
-        'Python-3.5.1',
+        'https://github.com/yyuu/pyenv/archive/v20160310.tar.gz',
+        'pyenv-20160310',
         install_commands))
 
 
@@ -390,7 +391,7 @@ if __name__ == '__main__':
     install_ant()
     install_sbt()
     install_scala()
-    install_python()
+    install_pyenv()
     install_neovim()
     install_go()
     install_hadoop()
