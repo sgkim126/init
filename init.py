@@ -195,8 +195,8 @@ def install_cmake():
                 'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.tar.gz',
-        'cmake-3.5.0-Linux-i386',
+        'https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz',
+        'cmake-3.9.1-Linux-x86_64',
         install_commands))
 
 
@@ -242,8 +242,8 @@ def install_git():
         return {'prefix': PREFIX, 'CURDIR': PREFIX}
     try_and_catch(partial(
         install,
-        'https://github.com/git/git/archive/v2.7.3.tar.gz',
-        'git-2.7.3',
+        'https://github.com/git/git/archive/v2.14.1.tar.gz',
+        'git-2.14.1',
         install_commands,
         get_env))
 
@@ -313,8 +313,8 @@ def install_pyenv():
                 'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://github.com/yyuu/pyenv/archive/v20160310.tar.gz',
-        'pyenv-20160310',
+        'https://github.com/pyenv/pyenv/archive/v1.1.3.tar.gz',
+        'pyenv-1.1.3',
         install_commands))
 
 
@@ -340,8 +340,8 @@ def install_neovim():
                 'make install']
     try_and_catch(partial(
         install,
-        'https://github.com/neovim/neovim/archive/v0.1.1.tar.gz',
-        'neovim-0.1.1',
+        'https://github.com/neovim/neovim/archive/v0.2.0.tar.gz',
+        'neovim-0.2.0',
         install_commands))
 
 
