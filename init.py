@@ -256,8 +256,8 @@ def install_node():
                 'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://nodejs.org/dist/v8.6.0/node-v8.6.0-linux-x64.tar.gz',
-        'node-v8.6.0-linux-x64',
+        'https://nodejs.org/dist/v8.11.1/node-v8.11.1-linux-x64.tar.xz',
+        'node-v8.11.1-linux-x64',
         install_commands))
 
 
