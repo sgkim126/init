@@ -243,8 +243,8 @@ def install_git():
         return {'prefix': PREFIX, 'CURDIR': PREFIX}
     try_and_catch(partial(
         install,
-        'https://github.com/git/git/archive/v2.14.1.tar.gz',
-        'git-2.14.1',
+        'https://github.com/git/git/archive/v2.18.0.tar.gz',
+        'git-2.18.0',
         install_commands,
         get_env))
 
