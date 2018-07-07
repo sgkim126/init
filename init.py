@@ -196,8 +196,8 @@ def install_cmake():
                 'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz',
-        'cmake-3.9.1-Linux-x86_64',
+        'https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.tar.gz',
+        'cmake-3.11.4-Linux-x86_64',
         install_commands))
 
 
