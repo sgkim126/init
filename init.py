@@ -314,8 +314,8 @@ def install_pyenv():
                 'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://github.com/pyenv/pyenv/archive/v1.1.3.tar.gz',
-        'pyenv-1.1.3',
+        'https://github.com/pyenv/pyenv/archive/v1.2.5.tar.gz',
+        'pyenv-1.2.5',
         install_commands))
 
 
