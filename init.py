@@ -181,9 +181,10 @@ def install_virtualenv():
                 'ln -s %s %s' % (target, sym_path)]
     try_and_catch(partial(
         install,
-        ('https://pypi.python.org/packages/source/v/virtualenv/'
-         'virtualenv-15.0.0.tar.gz'),
-        'virtualenv-15.0.0',
+        ('https://files.pythonhosted.org/packages/33/bc/'
+         'fa0b5347139cd9564f0d44ebd2b147ac97c36b2403943dbee8a25fd74012/'
+         'virtualenv-16.0.0.tar.gz'),
+        'virtualenv-16.0.0',
         install_commands))
 
 
