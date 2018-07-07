@@ -223,8 +223,8 @@ def install_curl():
                 'rm -rf %s' % current_path, ]
     try_and_catch(partial(
         install,
-        'https://curl.haxx.se/download/curl-7.47.1.tar.gz',
-        'curl-7.47.1',
+        'https://curl.haxx.se/download/curl-7.60.0.tar.gz',
+        'curl-7.60.0',
         install_commands))
 
 
