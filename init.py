@@ -375,7 +375,7 @@ def install_hadoop():
 
 
 if __name__ == '__main__':
-    apt_install('build-essential', 'clang')
+    apt_install('build-essential', 'clang', 'm4', 'libssl-dev', 'zlib1g-dev')
 
     initialize_root()
 
