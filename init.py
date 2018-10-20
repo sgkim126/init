@@ -134,6 +134,15 @@ def config_home():
     try_and_catch(config_home_internal)
 
 
+def confirm(message):
+    while True:
+        i = input(message)
+        if i == 'y':
+            return True
+        if i == 'n':
+            return False
+
+
 if __name__ == '__main__':
     apt_install('build-essential', 'curl', 'file', 'git')
 
