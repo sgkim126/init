@@ -70,6 +70,7 @@ def config_git():
         global_config('core.editor', 'vim')
         global_config('core.excludesfile', '~/.gitignore')
         global_config('diff.noprefix', 'true')
+        global_config('init.defaultBranch', 'main')
 
         name = input("Enter your name for git: ")
         if name != '':
